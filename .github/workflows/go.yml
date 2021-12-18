@@ -25,7 +25,7 @@ jobs:
       run: sudo service mysql stop
 
     - name: set up mysql
-      uses: mirromutth/mysql-action@v1.1
+      uses: baerwang/mysql-action@v1.2
       with:
         host port: 13306
         container port: 13306
