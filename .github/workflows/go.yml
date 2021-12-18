@@ -42,7 +42,7 @@ jobs:
 
     - name: import mysql sql
       run: |
-        mysql -h 127.0.0.1 -p 3306 < ./scripts/init.sql <<EOF
+        mysql -h 127.0.0.1 -P 3306 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
         EOF
