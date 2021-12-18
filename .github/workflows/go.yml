@@ -41,14 +41,15 @@ jobs:
         cat <<EOF > wait.sh
         #!/bin/sh
         while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
-          echo E
+          sleep 1
+          echo wait...
         done
         EOF
 
         chmod +x ./wait.sh
         echo START
         echo $(lsof -i:3306)
-        source ./test.sh || true
+        source ./wait.sh || true
         echo END
 
 
