@@ -39,6 +39,19 @@ jobs:
     - name: import mysql sql
       shell: bash
       run: |
+        cat <<EOF > wait.sh
+        #!/bin/sh
+        while ! mysqladmin ping --host=127.0.0.1 --password=root --silent; do
+          sleep 1
+          echo wait...
+        done
+        EOF
+
+        chmod +x ./wait.sh
+        echo START
+        source ./wait.sh || true
+        echo END
+
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
         mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
 
