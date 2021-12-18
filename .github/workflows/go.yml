@@ -41,7 +41,7 @@ jobs:
       run: |
         cat <<EOF > wait.sh
         #!/bin/sh
-        while ! mysqladmin ping --host=127.0.0.1 --password=root --silent; do
+        while ! mysqladmin ping --host=127.0.0.1 --password=root -P13306 --silent; do
           sleep 1
           echo wait...
         done
@@ -53,7 +53,7 @@ jobs:
         echo END
 
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
-        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
+        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -P13306 -v < ./scripts/init.sql
 
     - name: Test
       run: go test -v ./...
