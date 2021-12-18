@@ -35,9 +35,14 @@ jobs:
         mysql database: 'employees'
         mysql root password: root
 
+    - name: select mysql version and process
+      run: |
+        mysql --help | grep Distrib
+        lsof -i:3306
+
     - name: import mysql sql
       run: |
-        mysql -h 127.0.0.1 < ./scripts/init.sql <<EOF
+        mysql -h 127.0.0.1 -p 3306 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
         EOF
