@@ -37,7 +37,7 @@ jobs:
 
     - name: import mysql sql
       run: |
-        mysql -h 127.0.0.1 -u root -p${{ secrets.MYSQL_PWD }} < ./scripts/init.sql
+        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -p${{ secrets.MYSQL_PWD }} < ./scripts/init.sql
 
     - name: Test
       run: go test -v ./...
