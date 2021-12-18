@@ -31,7 +31,7 @@ jobs:
         use mysql
         create user ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1 identified by '${{ secrets.MYSQL_PWD }}';
         create database employees;
-        GRANT ALL PRIVILEGES ON employees.* TO ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1 IDENTIFIED BY '${{ secrets.MYSQL_PWD }}' WITH GRANT OPTION;
+        GRANT ALL ON employees.* to ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1;
         flush privileges;
         EOF
 
