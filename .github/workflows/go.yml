@@ -21,23 +21,28 @@ jobs:
     - name: go fmt
       run: go fmt ./...
 
-    - name: Start MySQL
-      run: sudo service mysql restart
+    - name: Shutdown Ubuntu MySQL (SUDOx)
+      run: sudo service mysql stop
 
-    - name: Create user and database
-      shell: bash
-      run: |
-        mysql -uroot -proot <<EOF
-        use mysql
-        create user ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1 identified by '${{ secrets.MYSQL_PWD }}';
-        create database employees;
-        GRANT ALL ON employees.* to ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1;
-        flush privileges;
-        EOF
+    - name: set up mysql
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306
+        container port: 3306
+        character set server: 'utf8mb4'
+        collation server: 'utf8mb4_unicode_ci'
+        mysql version: '5.7'
+        mysql root password: ${{ secrets.MYSQL_ROOT_PWD }}
+        mysql user: ${{ secrets.MYSQL_USER_NAME }}
+        mysql password: ${{ secrets.MYSQL_PWD }}
+
+#    - name: Start MySQL
+#      run: sudo service mysql restart
 
     - name: import mysql sql
       shell: bash
       run: |
+        sleep 15
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
         mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
 
