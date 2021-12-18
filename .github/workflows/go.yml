@@ -36,15 +36,25 @@ jobs:
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
-    - name: start mysql
+    - name: Wait for MySQL
       run: |
-        sudo service mysql start
+        cat <<EOF > wait.sh
+        #!/bin/sh
+        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
+          echo E
+        done
+        EOF
+
+        chmod +x ./wait.sh
+        echo START
         echo $(lsof -i:3306)
+        source ./test.sh || true
+        echo END
+
 
     - name: import mysql sql
       shell: bash
       run: |
-        sleep 15
         mysql -h 127.0.0.1 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
