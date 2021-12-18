@@ -32,7 +32,16 @@ jobs:
 
     - name: select port
       shell: bash
-      run: lsof -i:3306
+      run: |
+        cat <<EOF > test.sh
+        #!/bin/bash
+        lsof -i:3306
+        EOF
+
+        chmod +x ./test.sh
+        echo START
+        source ./test.sh || true
+        echo END
 
     - name: import mysql sql
       shell: bash
