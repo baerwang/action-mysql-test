@@ -37,35 +37,15 @@ jobs:
         mysql password: ${{ secrets.MYSQL_PWD }}
 
     - name: start mysql
-      run: sudo service mysql start
-
-    - name: select port
       run: |
-        cat <<EOF > $HOME/subscript.sh
-        #!/bin/sh
-        lsof -i:3306
-        EOF
-        chmod +x $HOME/subscript.sh
-
-        cat <<EOF > test.sh
-        #!/bin/bash
-        $HOME/subscript.sh
-        if [ $? = "" ]; then
-            echo PASS
-        fi;
-        EOF
-
-        chmod +x ./test.sh
-        echo START
+        sudo service mysql start
         echo $(lsof -i:3306)
-        source ./test.sh || true
-        echo END
 
     - name: import mysql sql
       shell: bash
       run: |
         sleep 15
-        mysql < ./scripts/init.sql <<EOF
+        mysql -h 127.0.0.1 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
         EOF
