@@ -27,15 +27,29 @@ jobs:
     - name: set up mysql
       uses: mirromutth/mysql-action@v1.1
       with:
+        host port: 3306
+        container port: 3306
+        character set server: 'utf8mb4'
+        collation server: 'utf8mb4_unicode_ci'
         mysql version: '8.0'
-        mysql root password: ${{ secrets.MYSQL_PWD }}
+        mysql database: 'employees'
+        mysql user: ${{ secrets.MYSQL_USER_NAME }}
+        mysql password: ${{ secrets.MYSQL_PWD }}
 
     - name: select port
-      shell: bash
       run: |
+        cat <<EOF > $HOME/subscript.sh
+        #!/bin/sh
+        lsof -i:3306
+        EOF
+        chmod +x $HOME/subscript.sh
+
         cat <<EOF > test.sh
         #!/bin/bash
-        lsof -i:3306
+        $HOME/subscript.sh
+        if [ $? = "" ]; then
+            echo PASS
+        fi;
         EOF
 
         chmod +x ./test.sh
