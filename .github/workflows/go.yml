@@ -31,10 +31,13 @@ jobs:
         container port: 3306
         character set server: 'utf8mb4'
         collation server: 'utf8mb4_unicode_ci'
-        mysql version: '8.0'
+        mysql version: '5.7'
         mysql database: 'employees'
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
+
+    - name: Start MySQL
+      run: sudo service mysql restart
 
     - name: Wait for MySQL
       run: |
