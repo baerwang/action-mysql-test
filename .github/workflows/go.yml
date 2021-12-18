@@ -31,9 +31,11 @@ jobs:
         mysql root password: ${{ secrets.MYSQL_PWD }}
 
     - name: select port
+      shell: bash
       run: lsof -i:3306
 
     - name: import mysql sql
+      shell: bash
       run: |
         sleep 15
         mysql -h 127.0.0.1 -P 3306 < ./scripts/init.sql <<EOF
