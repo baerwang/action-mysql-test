@@ -33,6 +33,7 @@ jobs:
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '5.7'
         mysql database: 'employees'
+        mysql root password: ${{ secrets.MYSQL_ROOT_PWD }}
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
@@ -41,9 +42,8 @@ jobs:
       run: |
         cat <<EOF > wait.sh
         #!/bin/sh
-        while ! mysqladmin ping --host=127.0.0.1 --password=root -P13306 --silent; do
+        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_ROOT_PWD }} -P13306 --silent; do
           sleep 1
-          echo wait...
         done
         EOF
 
