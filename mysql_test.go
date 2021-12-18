@@ -10,7 +10,7 @@ import (
 
 func TestMysql(t *testing.T) {
 
-	addr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8", "root", "123456", "127.0.0.1", 3306, "employees")
+	addr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8", "root", "root", "127.0.0.1", 3306, "employees")
 	db, err := gorm.Open(mysql.Open(addr), &gorm.Config{})
 	if err != nil {
 		t.Fatal("failed to connect database ", err)
