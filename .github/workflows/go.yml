@@ -38,7 +38,7 @@ jobs:
         mysql root password: ${{ secrets.MYSQL_PWD }}
 
     - name: Start MySQL
-      run: sudo service mysql start
+      run: sudo service mysql restart
 
     - name: Wait for MySQL
       run: |
