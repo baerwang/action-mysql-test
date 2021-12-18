@@ -24,7 +24,7 @@ jobs:
     - name: Shutdown Ubuntu MySQL (SUDOx)
       run: sudo service mysql stop
 
-    - name: set up mysql
+    - name: set up mysql ${{ secrets.MYSQL_PWD }}
       uses: mirromutth/mysql-action@v1.1
       with:
         host port: 3306
