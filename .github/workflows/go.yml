@@ -39,34 +39,12 @@ jobs:
     - name: Start MySQL
       run: sudo service mysql restart
 
-    - name: Wait for MySQL
-      run: |
-        cat <<EOF > wait.sh
-        #!/bin/sh
-        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
-          sleep 1
-          echo wait...
-        done
-        EOF
-
-        chmod +x ./wait.sh
-        echo START
-        source ./wait.sh || true
-        echo END
-
     - name: import mysql sql
       shell: bash
       run: |
-        cat <<EOF > test.sh
-        #!/bin/sh
-        mysql --help | grep Distrib
-        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -p${{ secrets.MYSQL_PWD }} < ./scripts/init.sql
+        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} < ./scripts/init.sql <<EOF
+        ${{ secrets.MYSQL_USER_NAME }}
         EOF
-
-        chmod +x ./test.sh
-        echo START
-        ./test.sh || true
-        echo END
 
     - name: Test
       run: go test -v ./...
