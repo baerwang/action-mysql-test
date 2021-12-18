@@ -24,11 +24,11 @@ jobs:
     - name: Shutdown Ubuntu MySQL (SUDOx)
       run: sudo service mysql stop
 
-    - name: set up mysql ${{ secrets.MYSQL_PWD }}
+    - name: set up mysql
       uses: mirromutth/mysql-action@v1.1
       with:
-        host port: 3306
-        container port: 3306
+        host port: 13306
+        container port: 13306
         character set server: 'utf8mb4'
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '5.7'
@@ -36,13 +36,9 @@ jobs:
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
-#    - name: Start MySQL
-#      run: sudo service mysql restart
-
     - name: import mysql sql
       shell: bash
       run: |
-        sleep 15
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
         mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
 
