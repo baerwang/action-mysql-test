@@ -51,18 +51,22 @@ jobs:
 
         chmod +x ./wait.sh
         echo START
-        echo $(lsof -i:3306)
         source ./wait.sh || true
         echo END
 
-
     - name: import mysql sql
-      shell: bash
       run: |
-        mysql -h 127.0.0.1 < ./scripts/init.sql <<EOF
-        ${{ secrets.MYSQL_USER_NAME }}
-        ${{ secrets.MYSQL_PWD }}
+        cat <<EOF > test.sh
+        #!/bin/sh
+        mysql --help | grep Distrib
+        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -p${{ secrets.MYSQL_PWD }} < ./scripts/init.sql <<EOF
         EOF
+
+        chmod +x ./test.sh
+        echo START
+        source ./test.sh || true
+        echo END
+
     - name: Test
       run: go test -v ./...
 
