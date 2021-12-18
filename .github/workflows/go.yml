@@ -31,19 +31,14 @@ jobs:
         container port: 3306
         character set server: 'utf8mb4'
         collation server: 'utf8mb4_unicode_ci'
-        mysql version: '5.7'
+        mysql version: '8.0'
         mysql database: 'employees'
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
-    - name: Wait for MySQL
-      run: |
-        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
-          sleep 1
-        done
-
     - name: import mysql sql
       run: |
+        sleep 15
         mysql -h 127.0.0.1 -P 3306 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
