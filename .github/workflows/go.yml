@@ -33,7 +33,7 @@ jobs:
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '5.7'
         mysql database: 'employees'
-        mysql root password: ${{ secrets.MYSQL_ROOT_PWD }}
+        mysql root password: 'root'
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
