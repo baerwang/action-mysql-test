@@ -27,20 +27,13 @@ jobs:
     - name: set up mysql
       uses: mirromutth/mysql-action@v1.1
       with:
-        host port: 3306
-        container port: 3306
-        character set server: 'utf8mb4'
-        collation server: 'utf8mb4_unicode_ci'
         mysql version: '8.0'
-        mysql database: 'employees'
-        mysql user: ${{ secrets.MYSQL_USER_NAME }}
-        mysql password: ${{ secrets.MYSQL_PWD }}
+        mysql root password: ${{ secrets.MYSQL_PWD }}
 
     - name: import mysql sql
       run: |
-        sleep 15
-        mysql --help | grep Distrib
         lsof -i:3306
+        sleep 15
         mysql -h 127.0.0.1 -P 3306 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
         ${{ secrets.MYSQL_PWD }}
