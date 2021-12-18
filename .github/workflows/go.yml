@@ -32,7 +32,6 @@ jobs:
         character set server: 'utf8mb4'
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '5.7'
-        mysql database: 'employees'
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
 
@@ -45,7 +44,7 @@ jobs:
         echo $(lsof -i:3306)
         echo $(lsof -i:3307)
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
-        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} employees -v < ./scripts/init.sql
+        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
 
     - name: Test
       run: go test -v ./...
