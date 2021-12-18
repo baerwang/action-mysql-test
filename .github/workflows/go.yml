@@ -33,10 +33,12 @@ jobs:
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '5.7'
         mysql database: 'employees'
+        mysql user: 'developer'
+        mysql password: ${{ secrets.MYSQL_PWD }}
         mysql root password: ${{ secrets.MYSQL_PWD }}
 
     - name: Start MySQL
-      run: sudo service mysql restart
+      run: sudo service mysql start
 
     - name: Wait for MySQL
       run: |
