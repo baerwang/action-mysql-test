@@ -33,12 +33,15 @@ jobs:
         collation server: 'utf8mb4_unicode_ci'
         mysql version: '8.0'
         mysql database: 'employees'
-        mysql root password: root
+        mysql user: ${{ secrets.MYSQL_USER_NAME }}
+        mysql password: ${{ secrets.MYSQL_PWD }}
 
-    - name: select mysql version and process
+    - name: Wait for MySQL
       run: |
-        mysql --help | grep Distrib
-        lsof -i:3306
+        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
+          sleep 1
+        done
+        ping -c 3 mysql
 
     - name: import mysql sql
       run: |
