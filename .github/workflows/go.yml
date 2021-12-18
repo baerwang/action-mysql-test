@@ -21,8 +21,26 @@ jobs:
     - name: go fmt
       run: go fmt ./...
 
-    - name: Build
-      run: go build -v ./...
+    - name: Shutdown Ubuntu MySQL (SUDOx)
+      run: sudo service mysql stop
+
+    - name: set up mysql
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306
+        container port: 3306
+        character set server: 'utf8mb4'
+        collation server: 'utf8mb4_unicode_ci'
+        mysql version: '8.0'
+        mysql database: 'employees'
+        mysql root password: root
+
+    - name: import mysql sql
+      run: |
+        mysql -h 127.0.0.1 -u root -proot < ../../scripts/init.sql
 
     - name: Test
       run: go test -v ./...
+
+    - name: Build
+      run: go build -v ./...
