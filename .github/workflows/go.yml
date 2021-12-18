@@ -21,8 +21,16 @@ jobs:
     - name: go fmt
       run: go fmt ./...
 
-    - name: Start MySQL
-      run: sudo service mysql restart
+    - name: Create user and database
+      shell: bash
+      run: |
+        mysql -uroot -proot <<EOF
+        use mysql
+        create user ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1 identified by '${{ secrets.MYSQL_PWD }}';
+        create database employees;
+        GRANT ALL PRIVILEGES ON employees.* TO ${{ secrets.MYSQL_USER_NAME }}@127.0.0.1 IDENTIFIED BY '${{ secrets.MYSQL_PWD }}' WITH GRANT OPTION;
+        flush privileges;
+        EOF
 
     - name: import mysql sql
       shell: bash
