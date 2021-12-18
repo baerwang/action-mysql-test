@@ -31,7 +31,7 @@ jobs:
         container port: 3306
         character set server: 'utf8mb4'
         collation server: 'utf8mb4_unicode_ci'
-        mysql version: '8.0'
+        mysql version: '5.7'
         mysql database: 'employees'
         mysql user: ${{ secrets.MYSQL_USER_NAME }}
         mysql password: ${{ secrets.MYSQL_PWD }}
@@ -41,7 +41,6 @@ jobs:
         while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_PWD }} --silent; do
           sleep 1
         done
-        ping -c 3 mysql
 
     - name: import mysql sql
       run: |
