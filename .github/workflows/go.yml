@@ -21,6 +21,9 @@ jobs:
     - name: go fmt
       run: go fmt ./...
 
+    - name: Start MySQL
+      run: sudo service mysql restart
+
     - name: Create user and database
       shell: bash
       run: |
