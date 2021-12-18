@@ -30,9 +30,11 @@ jobs:
         mysql version: '8.0'
         mysql root password: ${{ secrets.MYSQL_PWD }}
 
+    - name: select port
+      run: lsof -i:3306
+
     - name: import mysql sql
       run: |
-        lsof -i:3306
         sleep 15
         mysql -h 127.0.0.1 -P 3306 < ./scripts/init.sql <<EOF
         ${{ secrets.MYSQL_USER_NAME }}
