@@ -41,8 +41,6 @@ jobs:
     - name: import mysql sql
       shell: bash
       run: |
-        echo $(lsof -i:3306)
-        echo $(lsof -i:3307)
         export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
         mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -v < ./scripts/init.sql
 

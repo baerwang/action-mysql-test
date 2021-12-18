@@ -1,17 +1,20 @@
 package main
 
 import (
-	"github.com/jinzhu/gorm"
+	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"testing"
 	"time"
 )
 
 func TestMysql(t *testing.T) {
-	db, err := gorm.Open("mysql", "root:root@(localhost:3306)/employees")
+
+	addr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", "root", "root", "127.0.0.1", 3306, "employees")
+	db, err := gorm.Open(mysql.Open(addr), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		t.Fatal("failed to connect database ", err)
 	}
-	defer db.Close()
 
 	db.Create(&Employees{EmpNo: 1, FirstName: "wang", LastName: "bear", BirthDate: time.Now(), Gender: "F", HireDate: time.Now()})
 
