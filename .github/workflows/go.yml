@@ -11,52 +11,49 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
 
-    - name: go fmt
-      run: go fmt ./...
+      - name: go fmt
+        run: go fmt ./...
 
-    - name: Shutdown Ubuntu MySQL (SUDOx)
-      run: sudo service mysql stop
+      - name: Set Up MySQL
+        uses: baerwang/mysql-action@v1.2
+        with:
+          host port: 13306
+          container port: 13306
+          character set server: 'utf8mb4'
+          collation server: 'utf8mb4_unicode_ci'
+          mysql version: '8.0'
+          mysql database: 'employees'
+          mysql root password: 'root'
+          mysql user: 'dsl'
+          mysql password: '123456'
 
-    - name: set up mysql
-      uses: baerwang/mysql-action@v1.2
-      with:
-        host port: 13306
-        container port: 13306
-        character set server: 'utf8mb4'
-        collation server: 'utf8mb4_unicode_ci'
-        mysql version: '5.7'
-        mysql database: 'employees'
-        mysql root password: ${{ secrets.MYSQL_ROOT_PWD }}
-        mysql user: ${{ secrets.MYSQL_USER_NAME }}
-        mysql password: ${{ secrets.MYSQL_PWD }}
+      - name: Import MySQL init.sql
+        shell: bash
+        run: |
+          cat <<EOF > wait.sh
+          #!/bin/sh
+          while ! mysqladmin ping --host=127.0.0.1 --password=root -P13306 --silent; do
+            sleep 1
+          done
+          EOF
 
-    - name: import mysql sql
-      shell: bash
-      run: |
-        cat <<EOF > wait.sh
-        #!/bin/sh
-        while ! mysqladmin ping --host=127.0.0.1 --password=${{ secrets.MYSQL_ROOT_PWD }} -P13306 --silent; do
-          sleep 1
-        done
-        EOF
+          chmod +x ./wait.sh
+          echo START
+          source ./wait.sh || true
+          echo END
 
-        chmod +x ./wait.sh
-        echo START
-        source ./wait.sh || true
-        echo END
+          export MYSQL_PWD=123456
+          mysql -h 127.0.0.1 -u dsl -P13306 -v < ./scripts/init.sql
 
-        export MYSQL_PWD=${{ secrets.MYSQL_PWD }}
-        mysql -h 127.0.0.1 -u ${{ secrets.MYSQL_USER_NAME }} -P13306 -v < ./scripts/init.sql
+      - name: Test
+        run: go test -v ./...
 
-    - name: Test
-      run: go test -v ./...
-
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
